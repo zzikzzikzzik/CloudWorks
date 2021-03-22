@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		 
+	
+<mapper namespace="com.cloudWorks.erp.DashboardDAO">
+
+<select id="get_reportSignCntList" parameterType="com.cloudWorks.erp.DashboardDTO" resultType="java.util.HashMap">
+    select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '01'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '01'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '01'
+	    )||'' as "expense_cnt"
+	from dual	
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '02'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '02'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '02'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '03'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '03'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '03'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '04'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '04'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '04'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '05'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '05'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '05'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '06'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '06'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '06'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '07'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '07'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '07'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '08'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '08'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '08'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '09'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '09'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '09'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '10'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '10'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '10'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '11'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '11'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '11'
+	    )||'' as "expense_cnt"
+	from dual
+	union all
+	select 
+	    (
+	        select count(*)from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 1
+	            and to_char(sign_date, 'mm') = '12'
+	    )||'' as "daily_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 2
+	            and to_char(sign_date, 'mm') = '12'
+	    )||'' as "business_cnt" 
+	    ,(
+	        select count(*) from sign_finish_report
+	        where emp_no||'' = #{emp_no} 
+	        	and to_number(to_char(sign_date, 'yyyy')) = #{reportSignCnt}
+	            and report_code = 3
+	            and to_char(sign_date, 'mm') = '12'
+	    )||'' as "expense_cnt"
+	from dual
+</select>
+
+
+<select id="get_reportSignStateList" parameterType="com.cloudWorks.erp.DashboardDTO" resultType="java.util.HashMap">
+	select
+      count(*)||''	as "sign_code"        
+	from SIGN_FINISH_REPORT
+	where                    
+	    report_code = #{reportSignState}      
+		and to_char(SIGN_DATE,'YYYY')=#{signUpReportYear}||''  
+		and to_char(SIGN_DATE,'MM')=#{SignUpReportMonth}||''                   
+	    and report_no in (select report_no from daily_report where emp_no = #{emp_no})
+	    and sign_code = 1
+	    and emp_no = (select nvl(mgr_emp_no,(select nvl(mgr_emp_no,#{emp_no}) from employee where emp_no = #{emp_no})) 
+	                  from employee 
+	                  where emp_no = (select nvl(mgr_emp_no,#{emp_no}) from employee where emp_no = #{emp_no}))
+	
+	union all
+	
+	select
+      count(*)||''         
+	from SIGN_FINISH_REPORT
+	where                    
+	    report_code = #{reportSignState}      
+		and to_char(SIGN_DATE,'YYYY')=#{signUpReportYear}||''  
+		and to_char(SIGN_DATE,'MM')=#{SignUpReportMonth}||''                   
+	    and report_no in (select report_no from daily_report where emp_no = #{emp_no})
+	    and sign_code = 2
+	    and emp_no = (select nvl(mgr_emp_no,(select nvl(mgr_emp_no,#{emp_no}) from employee where emp_no = #{emp_no})) 
+	                  from employee 
+	                  where emp_no = (select nvl(mgr_emp_no,#{emp_no}) from employee where emp_no = #{emp_no}))
+	
+	union all
+	
+	select
+      count(*)||''         
+	from SIGN_FINISH_REPORT
+	where                    
+	    report_code = #{reportSignState}      
+		and to_char(SIGN_DATE,'YYYY')=#{signUpReportYear}||''  
+		and to_char(SIGN_DATE,'MM')=#{SignUpReportMonth}||''                   
+	    and report_no in (select report_no from daily_report where emp_no = #{emp_no})
+	    and sign_code = 3
+	    and emp_no = (select nvl(mgr_emp_no,(select nvl(mgr_emp_no,#{emp_no}) from employee where emp_no = #{emp_no})) 
+	                  from employee 
+	                  where emp_no = (select nvl(mgr_emp_no,#{emp_no}) from employee where emp_no = #{emp_no}))
+</select>
+
+
+<select id="get_reportTypeList" parameterType="com.cloudWorks.erp.DashboardDTO" resultType="java.util.HashMap">
+	<if test="reportType==1">
+		select 
+		    busi_type_code||''
+		    , busi_type_name as "name"
+		    , nvl(
+		        (select 
+		            count(busi_type_code) 
+		        from daily_report d          
+		        where  busi_type_code = c.busi_type_code
+		        and #{reportTypeYear}||'' in (select to_char(sign_date,'yyyy') from sign_finish_report s where d.report_no = s.report_no and d.emp_no = #{emp_no})
+		        group by busi_type_code)   
+		        , 0)||'' as "cnt"
+		from code_business_type c
+	</if>
+	<if test="reportType==2">
+		select 
+		    sales_type_code||''
+		    , sales_type_name as "name" 
+		    , nvl(
+		        (select 
+		            count(sales_type_code) 
+		        from sales_report ss          
+		        where  sales_type_code = c.sales_type_code
+		        and #{reportTypeYear}||'' in (select to_char(sign_date,'yyyy') from sign_finish_report s where ss.report_no = s.report_no and ss.emp_no = #{emp_no})
+		        group by sales_type_code)   
+		        , 0)||'' as "cnt"
+		from code_sales_type c
+	</if>
+	<if test="reportType==3">
+		select 
+		    expense_field_code||''
+		    , expense_field_name as "name" 
+		    , nvl(
+		        (select 
+		            count(expense_field_code) 
+		        from expense_report e          
+		        where  expense_field_code = c.expense_field_code 
+		        and #{reportTypeYear}||'' in (select to_char(sign_date,'yyyy') from sign_finish_report s where e.report_no = s.report_no and e.emp_no = #{emp_no})
+		        group by expense_field_code)   
+		        , 0)||'' as "cnt"
+		from code_expense_field c
+	</if>
+</select>
+
+
+
+
+<select id="get_dashboardLoginList" parameterType="com.cloudWorks.erp.DashboardDTO" resultType="java.util.HashMap">
+	select
+	       e.emp_no||''             as "emp_no"
+	       , e.emp_name             as "emp_name"
+	       , j.jikup_name       as "jikup_name"	       
+	from employee e, code_jikup j	
+	where e.jikup_code = j.jikup_code
+		and emp_no = #{emp_no}
+</select>
+
+
+<select id="get_signRequestList" parameterType="com.cloudWorks.erp.DashboardDTO" resultType="java.util.HashMap">
+	select * from
+	(
+		select
+		    e.emp_no||''                        as "emp_no"
+		    , cd.dep_name                       as "dep_name"
+		    , e.emp_name                        as "emp_name"
+		    , cj.jikup_name                     as "jikup_name"
+		    , xx.report_code||''                as "report_code"
+		    , xx.report_no||''                  as "report_no"
+		    , cr.report_name                    as "report_name"
+		    , xx.sign_date||''                  as "sign_date"
+		    , ceil(sysdate-xx.sign_date)||''    as "sign_date_cnt"
+		from
+		    code_dept cd, employee e, code_jikup cj, code_report cr,
+		    (
+		        select * from sign_finish_report
+		        where report_code = 1
+		        and report_no in (                                    -- daily_report dr   sales_report sr   expense_report er
+		                          select report_no from daily_report   
+		                          where emp_no in (select emp_no from employee
+		                                            where mgr_emp_no = #{emp_no}
+		                                            or mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		                         ) 
+		        and emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no})  
+		        and sign_date is not null                                               
+		        and report_no not in (
+		                                select report_no from sign_finish_report
+		                                where report_code = 1
+		                                and report_no in (                                    -- daily_report dr   sales_report sr   expense_report er
+		                                                  select report_no from daily_report   
+		                                                  where emp_no in (select emp_no from employee
+		                                                                    where mgr_emp_no = #{emp_no}
+		                                                                    or mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		                                                 ) 
+		                                and emp_no = #{emp_no}  
+		                                and sign_date is not null  
+		                            )
+		    ) xx
+		where cd.dep_no = e.dep_no
+		    and cj.jikup_code = e.jikup_code
+		    and cr.report_code = xx.report_code
+		    and xx.emp_no = e.emp_no  
+		
+		union all
+		
+		select
+		    e.emp_no||''                        as "emp_no"
+		    , cd.dep_name                       as "dep_name"
+		    , e.emp_name                        as "emp_name"
+		    , cj.jikup_name                     as "jikup_name"
+		    , xx.report_code||''                as "report_code"
+		    , xx.report_no||''                  as "report_no"
+		    , cr.report_name                    as "report_name"
+		    , xx.sign_date||''                  as "sign_date"
+		    , ceil(sysdate-xx.sign_date)||''    as "sign_date_cnt"
+		from
+		    code_dept cd, employee e, code_jikup cj, code_report cr,
+		    (
+		        select * from sign_finish_report
+		        where report_code = 2
+		        and report_no in (                                    -- daily_report dr   sales_report sr   expense_report er
+		                          select report_no from sales_report   
+		                          where emp_no in (select emp_no from employee
+		                                            where mgr_emp_no = #{emp_no}
+		                                            or mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		                         ) 
+		        and emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no})  
+		        and sign_date is not null                                               
+		        and report_no not in (
+		                                select report_no from sign_finish_report
+		                                where report_code = 2
+		                                and report_no in (                                    -- daily_report dr   sales_report sr   expense_report er
+		                                                  select report_no from sales_report   
+		                                                  where emp_no in (select emp_no from employee
+		                                                                    where mgr_emp_no = #{emp_no}
+		                                                                    or mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		                                                 ) 
+		                                and emp_no = #{emp_no}  
+		                                and sign_date is not null  
+		                            )
+		    ) xx
+		where cd.dep_no = e.dep_no
+		    and cj.jikup_code = e.jikup_code
+		    and cr.report_code = xx.report_code
+		    and xx.emp_no = e.emp_no    
+		
+		union all
+		
+		select
+		    e.emp_no||''                        as "emp_no"
+		    , cd.dep_name                       as "dep_name"
+		    , e.emp_name                        as "emp_name"
+		    , cj.jikup_name                     as "jikup_name"
+		    , xx.report_code||''                as "report_code"
+		    , xx.report_no||''                  as "report_no"
+		    , cr.report_name                    as "report_name"
+		    , xx.sign_date||''                  as "sign_date"
+		    , ceil(sysdate-xx.sign_date)||''    as "sign_date_cnt"
+		from
+		    code_dept cd, employee e, code_jikup cj, code_report cr,
+		    (
+		        select * from sign_finish_report
+		        where report_code = 3
+		        and report_no in (                                    -- daily_report dr   sales_report sr   expense_report er
+		                          select report_no from expense_report   
+		                          where emp_no in (select emp_no from employee
+		                                            where mgr_emp_no = #{emp_no}
+		                                            or mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		                         ) 
+		        and emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no})  
+		        and sign_date is not null                                               
+		        and report_no not in (
+		                                select report_no from sign_finish_report
+		                                where report_code = 3
+		                                and report_no in (                                    -- daily_report dr   sales_report sr   expense_report er
+		                                                  select report_no from expense_report   
+		                                                  where emp_no in (select emp_no from employee
+		                                                                    where mgr_emp_no = #{emp_no}
+		                                                                    or mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		                                                 ) 
+		                                and emp_no = #{emp_no}  
+		                                and sign_date is not null  
+		                            )
+		    ) xx
+		where cd.dep_no = e.dep_no
+		    and cj.jikup_code = e.jikup_code
+		    and cr.report_code = xx.report_code
+		    and xx.emp_no = e.emp_no   
+	)
+	order by 6
+</select>
+
+</mapper>

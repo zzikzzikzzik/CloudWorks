@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		 
+	
+<mapper namespace="com.cloudWorks.erp.MypageDAO">
+	
+	<select id ="getMypage" parameterType="com.cloudWorks.erp.MypageDTO" resultType="com.cloudWorks.erp.MypageDTO">
+		select
+			emp_no			"emp_no"
+			, emp_name		"emp_name"
+			, emp_pwd		"emp_pwd"
+			, email			"email"
+			, phone_num		"phone_num"
+			, pic 			"pic"
+		from employee
+		where emp_no=#{emp_no}
+	</select>
+	
+	<select id='getMypageCnt' parameterType="com.cloudWorks.erp.MypageDTO" resultType="int">
+		select count(*) from employee 
+		where emp_no=#{emp_no}
+	</select>
+	
+	<update id='updateMypage' parameterType="com.cloudWorks.erp.MypageDTO">
+		update employee 
+		set
+			phone_num = #{phone_num}
+			<if test="new_emp_pwd!=null and new_emp_pwd.length()>0">
+			, emp_pwd = #{new_emp_pwd}
+			</if>
+			, email = #{email}
+			<if test="pic!=null and pic.length()>0">
+				,pic=#{pic}
+			</if>
+		where
+		 	emp_no= #{emp_no} and emp_pwd = #{emp_pwd}
+	</update>
+	
+	
+	<!-- 
+	<select id ="checkEmpCnt" parameterType="com.cloudWorks.erp.MypageDTO" resultType="int">
+		select count(*) from employee
+			where
+				emp_no=#{emp_no}
+	</select>
+	
+	<update id="updateMypage" parameterType="com.cloudWorks.erp.MypageDTO">
+		update employee 
+		set
+			phone_num = #{phone_num}
+			<if test="new_emp_pwd!=null and new_emp_pwd.length()>0">
+			, emp_pwd = #{new_emp_pwd}
+			</if>
+			, email = #{email}
+			<if test="pic!=null and pic.length()>0">
+				,pic=#{pic}
+			</if>
+		where
+		 	emp_no= #{emp_no}
+	</update>
+ 	-->
+</mapper>

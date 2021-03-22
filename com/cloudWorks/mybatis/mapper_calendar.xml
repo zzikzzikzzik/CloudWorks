@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		 
+	
+<mapper namespace="com.cloudWorks.erp.CalendarDAO">
+	<select id='getScheduleList' parameterType="com.cloudWorks.erp.CalendarDTO" resultType="java.util.HashMap">
+		select
+			calendar_no||''   								as "calendar_no"
+			, emp_no||''									as "emp_no"
+			, schedule_code||''								as "schedule_code"			
+			, calendar_title								as "calendar_title"				
+			, to_char(calendar_start_date,'yyyy-mm-dd')		as "calendar_start_date"
+			, to_char(calendar_end_date,'yyyy-mm-dd')	  	as "calendar_end_date"
+		from calendar 
+		where emp_no = #{emp_no}
+	</select>
+	
+	<insert id='insertCalendar' parameterType="com.cloudWorks.erp.CalendarDTO" >
+		insert into calendar(
+			calendar_no             
+			,emp_no         
+			,schedule_code        
+			,calendar_title         
+			,calendar_start_date    
+			,calendar_end_date      
+		)
+		values(
+			(select nvl(max(calendar_no),0)+1 from calendar)
+			,#{emp_no}
+			,#{schedule_code}
+			,#{calendar_title}
+			,to_date(   #{calendar_start_date} , 'yyyy-mm-dd'  )
+			,to_date(   #{calendar_end_date}   , 'yyyy-mm-dd'  )
+		)
+		
+		
+		<!-- 
+			(select nvl(max(calendar_no),0)+1 from calendar)
+			,to_number('${emp_no}')
+			,to_number('${schedule_code}')
+			,'${calendar_title}'
+			,to_date('${calendar_start_date}','yyyy-mm-dd')
+			,to_date('${calendar_end_date}','yyyy-mm-dd')
+		 -->
+	</insert>
+
+	<select id='getCalendarList' parameterType="com.cloudWorks.erp.CalendarDTO" resultType="java.util.HashMap">
+		select
+			calendar_no||''   								as "calendar_no"
+			, c.emp_no||''									as "emp_no"
+			, schedule_code||''								as "schedule_code"			
+			, calendar_title								as "calendar_title"				
+			, to_char(calendar_start_date,'yyyy-mm-dd')		as "calendar_start_date"
+			, to_char(calendar_end_date,'yyyy-mm-dd')	  	as "calendar_end_date"
+			, e.emp_name									as "emp_name"
+		from calendar c, employee e 
+		where 
+            c.emp_no = e.emp_no
+			and c.emp_no = #{emp_no}
+			<![CDATA[
+			and calendar_start_date <= to_date(#{calendar_start_date},'yyyy-mm-dd') 
+			and to_date(#{calendar_end_date},'yyyy-mm-dd') <= calendar_end_date
+			]]>	
+		order by calendar_start_date asc, calendar_end_date asc
+	</select>
+	
+	
+	<select id='getUpdelList' parameterType="com.cloudWorks.erp.CalendarDTO" resultType="java.util.HashMap">
+		select
+      		xx.*, rownum||'' as "rnum"
+  		from
+    		(
+        		select
+		            calendar_no||''                                   as "calendar_no"
+		            , c.emp_no||''                                    as "emp_no"
+		            , schedule_code||''                                as "schedule_code"            
+		            , calendar_title                                	as "calendar_title"                
+		            , to_char(calendar_start_date,'yyyy-mm-dd')        as "calendar_start_date"
+		            , to_char(calendar_end_date,'yyyy-mm-dd')          as "calendar_end_date"
+		            , e.emp_name                                    	as "emp_name"
+		        from calendar c, employee e 
+		        where 
+		            c.emp_no = e.emp_no
+		            and c.emp_no = #{emp_no}
+					<![CDATA[
+					and calendar_start_date <= to_date(#{calendar_start_date},'yyyy-mm-dd') 
+					and to_date(#{calendar_end_date},'yyyy-mm-dd') <= calendar_end_date
+					]]>	
+		        order by calendar_start_date asc, calendar_end_date asc
+			) xx
+		<!-- 
+		where rownum = #{rnum}
+		-->
+        
+        
+        <!-- 
+		select
+			calendar_no||''   								as "calendar_no"
+			, c.emp_no||''									as "emp_no"
+			, schedule_code||''								as "schedule_code"			
+			, calendar_title								as "calendar_title"				
+			, to_char(calendar_start_date,'yyyy-mm-dd')		as "calendar_start_date"
+			, to_char(calendar_end_date,'yyyy-mm-dd')	  	as "calendar_end_date"
+			, e.emp_name									as "emp_name"
+		from calendar c, employee e 
+		where 
+            c.emp_no = e.emp_no
+			and c.emp_no = #{emp_no}
+			<![CDATA[
+			and calendar_start_date <= to_date(#{calendar_start_date},'yyyy-mm-dd') 
+			and to_date(#{calendar_end_date},'yyyy-mm-dd') <= calendar_end_date
+			]]>	
+		order by calendar_start_date asc
+		-->
+		 
+	</select>
+	
+	<select id='getCalendarCnt' parameterType="com.cloudWorks.erp.CalendarDTO" resultType="int">
+		select count(*) from calendar 
+		where calendar_no=#{calendar_no}
+	</select>
+	
+	<update id="updateCalendar" parameterType="com.cloudWorks.erp.CalendarDTO">
+		update calendar set 
+			schedule_code = #{schedule_code}			
+			, calendar_title = #{calendar_title}				
+			, calendar_start_date = to_date(#{calendar_start_date},'yyyy-mm-dd')
+			, calendar_end_date = to_date(#{calendar_end_date},'yyyy-mm-dd')
+		where 
+			calendar_no=#{calendar_no}				
+	</update>
+	
+	<delete id="deleteCalendar" parameterType="com.cloudWorks.erp.CalendarDTO">
+		delete from calendar 
+		where calendar_no=#{calendar_no}				
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
+

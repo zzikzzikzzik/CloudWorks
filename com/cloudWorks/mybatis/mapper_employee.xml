@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		 
+	
+<mapper namespace="com.cloudWorks.erp.EmployeeDAO">
+		
+	<sql id="employeewhere">
+		<if test="keyword1!=null and keyword1.length()>0">
+		and(
+			upper(emp_name) like upper('%${keyword1}%')
+			or emp_no like upper('%${keyword1}%')
+		)
+		</if>
+		<if test="selectJikupCode!=null and selectJikupCode.length()>0">
+		and(
+			jikup_code like #{selectJikupCode}
+		)
+		</if>
+		<if test="selectDepNo!=null and selectDepNo.length()>0">
+		and(
+			dep_no like #{selectDepNo}
+		)
+		</if>
+	</sql>
+
+
+	<!-- 직원정보얻기 -->
+	<select id="getEmployeeList" parameterType="com.cloudWorks.erp.EmployeeSearchDTO" resultType="java.util.HashMap">
+		 select * from (select zxc.*, rownum||'' "RNUM" from (
+			select
+		        e1.emp_no||''   																 "emp_no"
+		        , e1.emp_name  																	"emp_name"
+		        , (select j.jikup_name from code_jikup j where e1.jikup_code=j.jikup_code)   "jikup_name"
+		        , (select d.dep_name from code_dept d where e1.dep_no=d.dep_no)  			  "dep_name"
+		        , nvl((select to_char(e2.emp_no) from employee e2 where e1.mgr_emp_no=e2.emp_no),'-')      "mgr_emp_no"
+		        , nvl((select to_char(e2.emp_name) from employee e2 where e1.mgr_emp_no=e2.emp_no),'-')   "mgr_emp_name"
+		        , e1.phone_num||''      "phone_num"
+		        , decode(e1.allow_code, '1', '승인완료', '가입대기')        "allow_code"
+	    	from employee e1
+	    	where 1=1
+	    		and e1.allow_code='1'
+	    		<include refid="employeewhere"/>
+	    		order by 
+	    	<if test="orderby!=null and orderby.length()>0">
+	    			${orderby} ,
+    		</if>
+	    	1 asc
+	    <![CDATA[
+		  ) zxc where rownum <= ${selectPageNo*rowCntPerPage} ) where RNUM >= ${selectPageNo*rowCntPerPage-rowCntPerPage+1}
+		 ]]>
+	</select>
+	
+	
+	<select id="getEmployeeListAllCnt" parameterType="com.cloudWorks.erp.EmployeeSearchDTO" resultType="int">
+		select count(*) from employee
+		where 1=1
+			and allow_code='1'
+			<include refid="employeewhere"/>
+	</select>
+	
+	<!-- 직원정보얻기 -->
+	<select id ="getEmployee" parameterType="int" resultType="com.cloudWorks.erp.EmployeeDTO">
+		select
+			emp_no			"emp_no"
+			, emp_name		"emp_name"
+			, emp_pwd		"emp_pwd"
+			, jikup_code	"jikup_code"
+			, email			"email"
+			, mgr_emp_no	"mgr_emp_no"
+			, dep_no		"dep_no"
+			, jumin_num		"jumin_num"
+			, phone_num		"phone_num"
+			, allow_code	"allow_code"
+		from employee
+			where
+				emp_no=#{emp_no}
+	
+	</select>
+	
+	<!-- 가입관리 직원 리스트 얻기 -->
+	<select id="getBeforeAllowList" parameterType="com.cloudWorks.erp.EmployeeSearchDTO" resultType="java.util.HashMap">
+		select * from (select zxc.*, rownum||'' "RNUM" from (
+			select
+		        e1.emp_no||''   																 "emp_no"
+		        , e1.emp_name  																	"emp_name"
+		        , (select j.jikup_name from code_jikup j where e1.jikup_code=j.jikup_code)   "jikup_name"
+		        , (select d.dep_name from code_dept d where e1.dep_no=d.dep_no)  			  "dep_name"
+		        , nvl((select to_char(e2.emp_no) from employee e2 where e1.mgr_emp_no=e2.emp_no),'-')      "mgr_emp_no"
+		        , nvl((select to_char(e2.emp_name) from employee e2 where e1.mgr_emp_no=e2.emp_no),'-')   "mgr_emp_name"
+		        , e1.phone_num||''      "phone_num"
+		        , decode(e1.allow_code, '2', '가입대기', '승인완료')        "allow_code"
+	    	from employee e1
+	    	where 1=1
+	    		and e1.allow_code='2'
+	    		<include refid="employeewhere"/>
+	    		<if test="orderby!=null and orderby.length()>0">
+	    			order by ${orderby}
+    			</if>
+	    		
+     	<![CDATA[
+	  		) zxc where rownum <= ${selectPageNo*rowCntPerPage} ) where RNUM >= ${selectPageNo*rowCntPerPage-rowCntPerPage+1}
+		 ]]>
+			
+	</select>
+	
+	<select id="getBeforeAllowCnt" parameterType="com.cloudWorks.erp.EmployeeSearchDTO" resultType="int">
+		select count(*) from employee
+		where 1=1
+			and allow_code='2'
+			<include refid="employeewhere"/>
+	</select>
+	
+	<update id="updateEmployee" parameterType="com.cloudWorks.erp.EmployeeDTO">
+		update employee
+		set
+		<!-- 	emp_no = #{new_emp_no} -->
+			emp_name = #{emp_name}
+			, jumin_num = #{jumin_num}
+			, email = #{email}
+			, jikup_code = #{jikup_code}
+			, dep_no = #{dep_no}
+			, allow_code = #{allow_code}
+			, phone_num = #{phone_num}
+			<if test="mgr_emp_no!=null and mgr_emp_no!=0">
+			, mgr_emp_no = #{mgr_emp_no}
+			</if>
+			<if test="mgr_emp_no!=null and mgr_emp_no==0">
+			, mgr_emp_no = null
+			</if>
+			<if test="new_emp_pwd!=null and new_emp_pwd.length()>0">
+				, emp_pwd = #{new_emp_pwd}
+			</if>
+		where
+		 	emp_no= #{emp_no}
+	</update>
+	
+	<select id="getEmpPwdCnt" parameterType="com.cloudWorks.erp.EmployeeDTO" resultType="int">
+		select count(*) from employee
+		where emp_no = #{admin_no}
+			and emp_pwd = #{is_pwd}
+	
+	</select>
+	
+	
+	<select id="getStaffCnt" parameterType="com.cloudWorks.erp.EmployeeDTO" resultType="int">
+		select count(*) from employee
+		where mgr_emp_no = #{emp_no}
+			
+	
+	</select>
+	
+	<delete id="DeleteEmployee" parameterType="com.cloudWorks.erp.EmployeeDTO">
+		delete from employee where emp_no= #{emp_no}
+	</delete>
+	
+	
+	<!-- 직급사원 리스트 뽑기 -->
+	<select id="getMgrList" parameterType="com.cloudWorks.erp.EmployeeDTO" resultType="java.util.HashMap">
+		select
+   		 	emp_no		    "mgr_emp_no"
+   		 	, emp_name		 "mgr_emp_name"
+   		 	, (select j.jikup_name from code_jikup j where e1.jikup_code=j.jikup_code)   "jikup_name"
+    		, (select d.dep_name from code_dept d where e1.dep_no=d.dep_no)                "dep_name"
+		from employee e1
+		where allow_code = '1'
+			<![CDATA[
+			and
+				jikup_code < '7'
+			]]>
+			<!-- <if test="dep_no!=null">
+		 	and
+		 		dep_no = #{dep_no}
+			</if> -->
+	</select>
+	
+	
+	<select id="getSelectMgrList" parameterType="com.cloudWorks.erp.EmployeeDTO" resultType="java.util.HashMap">
+		select
+			e.emp_no||'' as "mgr_emp_no"
+			, cd.dep_name||' '||e.emp_name||' '||cj.jikup_name as "selectMgr"
+		from 
+			employee e, code_dept cd, code_jikup cj
+		where
+			e.dep_no = cd.dep_no and e.jikup_code = cj.jikup_code
+			and e.dep_no = #{dep_no}
+			<![CDATA[
+			and e.jikup_code < #{jikup_code}
+			]]>
+		order by e.jikup_code asc 
+	</select>
+	
+</mapper>
+

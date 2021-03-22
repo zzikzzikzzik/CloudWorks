@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		 
+	
+<mapper namespace="com.cloudWorks.mybatis.DailyDAO">
+	<sql id="search">
+		<if test="begin_year != null and begin_year.length()>0">
+			and
+		
+			busi_start_date >= to_date(#{begin_year}||#{begin_month}, 'YYYY-MM')
+			
+			<if test="end_year != null and end_year.length()>0">
+				and
+			<![CDATA[
+			busi_end_date <= last_day(to_date(#{end_year}||#{end_month}, 'YYYY-MM'))
+			
+			 ]]> 
+			</if>
+		</if>
+		<if test="begin_year == null or begin_year.length()==0">
+			<if test="end_year != null and end_year.length()>0">
+					and
+				<![CDATA[
+					busi_end_date <= last_day(to_date(#{end_year}||#{end_month}, 'YYYY-MM'))
+				 ]]> 
+			</if>
+		</if>
+		
+		<if test="busi_type_code != null and busi_type_code.length()>0">
+	 		and
+	 		
+			lower(busi_type_code) like lower('%${busi_type_code}%')
+		</if>
+		
+		<!-- 상급자의 상급자가 존재할 경우 -->
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('1a')">
+	 			and
+	 		
+				lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) ) like '%승인%'
+			</if>
+		</if>
+		
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('2a')">
+	 			and
+			
+				lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) ) like '%반려%'
+			</if>
+	 		
+		</if>
+		
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('3a')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) ) like '%진행 중%'
+			</if>
+		</if>
+		
+		<!-- 상급자만 존재할 경우 -->
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('1b')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and sfr.emp_no = em.mgr_emp_no) ) like '%승인%'
+			</if>
+		</if>
+		
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('2b')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and sfr.emp_no = em.mgr_emp_no) ) like '%반려%'
+			</if>
+		</if>
+		
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('3b')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and sfr.emp_no = em.mgr_emp_no) ) like '%진행 중%'
+			</if>
+		</if>
+		
+		<!-- 상급자가 존재하지 않을 경우 -->
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('1c')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and emp_no = #{emp_no}) ) like '%승인%'
+			</if>
+		</if>
+		
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('2c')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and emp_no = #{emp_no}) ) like '%반려%'
+			</if>
+		</if>
+		
+		<if test="sign != null and sign.length()>0">
+			<if test="sign.equals('3c')">
+	 		and
+	 		
+			lower( (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and emp_no = #{emp_no}) ) like '%진행 중%'
+			</if>
+		</if>
+		
+		
+		
+		
+		
+		
+		<if test="busi_content != null and busi_content.length()>0">
+	 		and
+	 		
+			lower(busi_content) like lower('%${busi_content}%')
+		</if>
+	</sql>
+
+<select id="dailyListForm" parameterType="com.cloudWorks.erp.DailySearchDTO" resultType="java.util.HashMap">
+	select k.*
+	from(
+		select f.*, rownum||'' "RNUM"
+		from(
+				select 
+				    dr.report_no||'' "REPORT_NO",
+				    dr.emp_no||'' "EMP_NO",
+				    (select emp_name from employee e where e.emp_no = dr.emp_no)|| ' ' ||(select jikup_name from employee em, code_jikup cj where em.emp_no = dr.emp_no and em.jikup_code = cj.jikup_code) "EMP_NAME",
+				    (select busi_type_name from code_business_type b where b.busi_type_code = dr.busi_type_code) "BUSI_TYPE_NAME",
+				    (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and sfr.emp_no = em.mgr_emp_no) "MGR_SIGN_NAME",
+				    (select cs.sign_name from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) "MGR_MGR_SIGN_NAME",
+				    busi_content "BUSI_CONTENT",
+				    (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and emp_no = #{emp_no}) "SIGN_NAME",
+				    trunc(sysdate-(select sign_date from sign_finish_report sfr2 where dr.report_no = sfr2.report_no and dr.report_code = sfr2.report_code and emp_no = #{emp_no}), 0)||'' "SIGN_DATE",
+				    to_char(busi_start_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN')||'   ~   '||to_char(busi_end_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') "BUSI_DATE"
+				
+				
+				from daily_report dr, employee em
+				where dr.emp_no = em.emp_no
+				    and dr.report_code = 1
+				    and report_no in (select report_no from sign_finish_report where emp_no = #{emp_no})
+				    and em.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+				    and em.dep_no = (select dep_no from employee where emp_no = #{emp_no})
+				    and 
+				    (
+				    em.emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no})
+				    or em.emp_no in (select emp_no from employee where mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+				    or em.emp_no in (select mgr_emp_no from employee where emp_no in (select mgr_emp_no from employee where emp_no = #{emp_no}))
+				    or em.emp_no in (select mgr_emp_no from employee where emp_no = #{emp_no}) 
+				    or em.emp_no = #{emp_no}
+				    )
+				<include refid="search"/>
+					
+				order by emp_name
+			) f<![CDATA[
+		where rownum <= ${selectPageNo * rowCntPerPage} 
+		]]>
+	) k
+	where RNUM >= ${selectPageNo * rowCntPerPage - rowCntPerPage + 1} 
+	<if test ="order !=null and order.length()>0">
+    	order by ${order}
+    </if>
+    
+</select>
+
+<select id="getBoardListAllCnt" parameterType="com.cloudWorks.erp.DailySearchDTO" resultType="int">
+
+select count(*)
+from(
+		select 
+		    dr.report_no||'' "REPORT_NO",
+		    dr.emp_no||'' "EMP_NO",
+		    (select emp_name from employee e where e.emp_no = dr.emp_no)|| ' ' ||(select jikup_name from employee em, code_jikup cj where em.emp_no = dr.emp_no and em.jikup_code = cj.jikup_code) "EMP_NAME",
+		    (select busi_type_name from code_business_type b where b.busi_type_code = dr.busi_type_code) "BUSI_TYPE_NAME",
+		    (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and sfr.emp_no = em.mgr_emp_no) "MGR_SIGN_NAME",
+		    (select cs.sign_name from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) "MGR_MGR_SIGN_NAME",
+		    busi_content "BUSI_CONTENT",
+		    (select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and emp_no = #{emp_no}) "SIGN_NAME",
+		    trunc(sysdate-(select sign_date from sign_finish_report sfr2 where dr.report_no = sfr2.report_no and dr.report_code = sfr2.report_code and emp_no = #{emp_no}), 0)||'' "SIGN_DATE",
+		    to_char(busi_start_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN')||'   ~   '||to_char(busi_end_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') "BUSI_DATE"
+		
+		
+		from daily_report dr, employee em
+		where dr.emp_no = em.emp_no
+		    and dr.report_code = 1
+		    and report_no in (select report_no from sign_finish_report where emp_no = #{emp_no})
+		    and em.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+		    and em.dep_no = (select dep_no from employee where emp_no = #{emp_no})
+		    and 
+		    (
+		    em.emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no})
+		    or em.emp_no in (select emp_no from employee where mgr_emp_no in (select emp_no from employee where mgr_emp_no = #{emp_no}))
+		    or em.emp_no in (select mgr_emp_no from employee where emp_no in (select mgr_emp_no from employee where emp_no = #{emp_no}))
+		    or em.emp_no in (select mgr_emp_no from employee where emp_no = #{emp_no}) 
+		    or em.emp_no = #{emp_no}
+		    )
+		<include refid="search"/>
+			
+		order by emp_name
+	) 
+</select>
+
+<select id ="dailyContentForm" parameterType="com.cloudWorks.erp.DailyDTO" resultType="com.cloudWorks.erp.DailyDTO">
+
+	select
+		<!-- 내 승인 정보 -->
+		(select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and emp_no = ${emp_no}) "MY_SIGN_NAME",
+		
+		<!-- 부하직원 승인 정보 -->
+		(select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and dr.emp_no = sfr.emp_no and mgr_emp_no = ${emp_no}) "MYUNDER_SIGN_NAME",
+		
+		<!-- 본인 정보 -->
+		(select emp_name from employee e where e.emp_no = dr.emp_no) "EMP_NAME",
+		(select jikup_name from code_jikup cj where em.jikup_code = cj.jikup_code) "JIKUP_NAME",
+		(select dep_name from code_dept cd where em.dep_no = cd.dep_no ) "DEP_NAME",
+		(select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and dr.emp_no = sfr.emp_no) "SIGN_NAME",
+	    (select to_char(sfr.sign_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and dr.emp_no = sfr.emp_no) "SIGN_DATE",
+	    (select return_result from return_report rr, sign_finish_report sfr where dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and rr.sfr_no = sfr.sign_finish_no and em.emp_no = sfr.emp_no) "RETURN_RESULT",	
+		
+		<!-- 상급자 정보 -->
+		(select emp_name from employee em2 where em.mgr_emp_no = em2.emp_no) "MGR_EMP_NAME",
+		(select dep_name from code_dept cd2, employee em3 where em.mgr_emp_no = em3.emp_no and em3.dep_no = cd2.dep_no) "MGR_DEP_NAME",
+		(select jikup_name from code_jikup cj2, employee em3 where em.mgr_emp_no = em3.emp_no and em3.jikup_code = cj2.jikup_code) "MGR_JIKUP_NAME",
+		(select cs.sign_name from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and sfr.emp_no = em.mgr_emp_no) "MGR_SIGN_NAME",
+    	(select to_char(sfr.sign_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') from code_sign cs ,sign_finish_report sfr where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = sfr.emp_no) "MGR_SIGN_DATE",
+   	 	(select return_result from return_report rr, sign_finish_report sfr, employee em2 where dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and rr.sfr_no = sfr.sign_finish_no and em.mgr_emp_no = em2.emp_no and em2.emp_no = sfr.emp_no ) "MGR_RETURN_RESULT",
+
+
+		<!-- 상급자의 상급자 정보 -->
+		(select em3.emp_name from employee em2, employee em3 where em.mgr_emp_no = em2.emp_no and em2.mgr_emp_no = em3.emp_no) "MGR_MGR_EMP_NAME",
+		(select dep_name from code_dept cd2, employee em3, employee em4 where em4.dep_no = cd2.dep_no and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no) "MGR_MGR_DEP_NAME",
+		(select jikup_name from code_jikup cj2, employee em3, employee em4 where em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.jikup_code = cj2.jikup_code) "MGR_MGR_JIKUP_NAME",
+		(select cs.sign_name from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) "MGR_MGR_SIGN_NAME",
+		(select to_char(sfr.sign_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') from code_sign cs ,sign_finish_report sfr, employee em3, employee em4 where cs.sign_code = sfr.sign_code and dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and  em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) "MGR_MGR_SIGN_DATE",
+		(select return_result from return_report rr, sign_finish_report sfr, employee em3, employee em4 where dr.report_no = sfr.report_no and dr.report_code = sfr.report_code and rr.sfr_no = sfr.sign_finish_no and em.mgr_emp_no = em3.emp_no and em3.mgr_emp_no = em4.emp_no and em4.emp_no = sfr.emp_no) "MGR_MGR_RETURN_RESULT",
+		
+		
+		(select busi_type_name from code_business_type b where b.busi_type_code = dr.busi_type_code) "BUSI_TYPE_NAME",
+		busi_content "BUSI_CONTENT",
+		to_char(busi_start_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') "BUSI_START_DATE",
+		to_char(busi_end_date, 'YYYY-MM-DD hh24:mi dy', 'NLS_DATE_LANGUAGE = KOREAN') "BUSI_END_DATE"
+	from daily_report dr, employee em
+	where dr.emp_no = em.emp_no
+		and em.jikup_code >= (select jikup_code from employee where emp_no = ${emp_no})
+		and em.dep_no = (select dep_no from employee where emp_no = ${emp_no})
+		and report_code = 1
+		and report_no = ${report_no}
+
+
+
+</select>
+
+<insert id="insertDaily" parameterType="com.cloudWorks.erp.DailyDTO">
+	insert into DAILY_REPORT(
+	    report_no,
+	    report_code,
+	    busi_type_code,
+	    busi_start_date,
+	    busi_end_date,
+	    busi_content,
+	    emp_no,
+	    revise_cnt
+	)
+	values(
+	    (select nvl(max(report_no), 0)+1 from daily_report),
+	    1,
+	    ${busi_type_code},
+	    to_date(#{busi_start_date}, 'YYYY-MM-DD hh24:mi'),
+	    to_date(#{busi_end_date}, 'YYYY-MM-DD hh24:mi'),
+	    #{busi_content},
+	    ${emp_no},
+	    0
+	)
+</insert>
+
+
+
+
+<select id ="dailyRegForm" parameterType="com.cloudWorks.erp.DailyDTO" resultType="com.cloudWorks.erp.DailyDTO">
+	select
+		emp_name "EMP_NAME",
+		(select jikup_name from code_jikup cj where em.jikup_code = cj.jikup_code) "JIKUP_NAME",
+		(select emp_name from employee em2 where em.mgr_emp_no = em2.emp_no) "MGR_EMP_NAME",
+		(select jikup_name from code_jikup cj2, employee em3 where em.mgr_emp_no = em3.emp_no and em3.jikup_code = cj2.jikup_code) "MGR_JIKUP_NAME"
+	from employee em
+	where emp_no = ${emp_no}
+
+</select>
+
+<select id = "getCheckMgrCnt" parameterType="com.cloudWorks.erp.DailyDTO" resultType="int">
+
+	select count(mgr_emp_no)
+	from employee
+	where emp_no = ${emp_no}
+
+</select>
+
+<select id = "getCheck_Mgr_MgrCnt" parameterType="com.cloudWorks.erp.DailyDTO" resultType="int">
+
+	select count(mgr_emp_no)
+	from employee
+	where emp_no = (select mgr_emp_no from employee where emp_no = ${emp_no})
+</select>
+
+
+<insert id="insertDailySign_1" parameterType="com.cloudWorks.erp.DailyDTO">
+	insert into SIGN_FINISH_REPORT(
+		sign_finish_no,
+		emp_no,
+		report_code,
+		report_no,
+		sign_date,
+		sign_code,
+		return_no
+	)
+	values(
+		(select nvl(max(sign_finish_no), 0)+1 from sign_finish_report),
+		${emp_no},
+		1,
+		(select max(report_no) from daily_report where emp_no = ${emp_no}),
+		sysdate,
+		1,
+		0
+	)
+
+</insert>
+
+<insert id="insertDailySign_2" parameterType="com.cloudWorks.erp.DailyDTO">
+	insert into SIGN_FINISH_REPORT(
+		sign_finish_no,
+		emp_no,
+		report_code,
+		report_no,
+		sign_code,
+		return_no
+	)
+	values(
+		(select nvl(max(sign_finish_no), 0)+1 from sign_finish_report),
+		(select mgr_emp_no from employee where emp_no = ${emp_no}),
+		1,
+		(select max(report_no) from daily_report where emp_no = ${emp_no}),
+		3,
+		0
+	)
+
+</insert>
+
+<insert id="insertDailySign_3" parameterType="com.cloudWorks.erp.DailyDTO">
+	insert into SIGN_FINISH_REPORT(
+		sign_finish_no,
+		emp_no,
+		report_code,
+		report_no,
+		sign_code,
+		return_no
+	)
+	values(
+		(select nvl(max(sign_finish_no), 0)+1 from sign_finish_report),
+		(select mgr_emp_no from employee where emp_no = (select mgr_emp_no from employee where emp_no = ${emp_no})),
+		1,
+		(select max(report_no) from daily_report where emp_no = ${emp_no}),
+		3,
+		0
+	)
+
+</insert>
+
+
+<update id="dailyConfirmCnt" parameterType="com.cloudWorks.erp.DailyDTO">
+	update sign_finish_report
+	set sign_code = 1, sign_date = sysdate
+	where emp_no = #{emp_no}
+		and report_code = 1 
+		and report_no = #{report_no}
+
+</update>
+
+<update id="dailyReturnCnt" parameterType="com.cloudWorks.erp.DailyDTO">
+	update sign_finish_report
+	set sign_code = 2, sign_date = sysdate
+	where emp_no = ${emp_no}
+		and report_code = 1 
+		and report_no = ${report_no}
+</update>
+
+
+<insert id="dailyReturn_resultCnt" parameterType="com.cloudWorks.erp.DailyDTO">
+
+insert into return_report(
+	sfr_no,
+	return_result
+)
+values(
+	(select sign_finish_no from sign_finish_report where emp_no = #{emp_no} and report_code = 1 and report_no = #{report_no}),
+	#{return_result}
+
+)
+
+</insert>
+
+
+<update id="dailyReturn_MGR_Cnt" parameterType="com.cloudWorks.erp.DailyDTO">
+	update sign_finish_report
+	set sign_code = 2
+	where emp_no = (select mgr_emp_no from employee where emp_no = #{emp_no})
+		and report_code = 1 
+		and report_no = #{report_no}
+</update>
+
+<!--  
+<select id ="dailyContentForm1" parameterType="com.cloudWorks.erp.DailyDTO" resultType="java.util.HashMap">
+
+select
+     e.emp_name||'' "EMP_NAME"
+    ,cd.dep_name||'' "DMP_NAME"
+    ,cj.jikup_name||'' "JIKUP_NAME"
+from employee e, code_dept cd, code_jikup cj
+where e.dep_no = cd.dep_no and e.jikup_code = cj.jikup_code
+    and mgr_emp_no = (select emp_no from employee where mgr_emp_no = #{emp_no})
+    and e.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+
+union all
+
+select
+     e.emp_name||''
+    ,cd.dep_name||''
+    ,cj.jikup_name||''
+from employee e, code_dept cd, code_jikup cj
+where e.dep_no = cd.dep_no and e.jikup_code = cj.jikup_code
+    and mgr_emp_no = #{emp_no}
+    and e.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+
+union all
+
+select
+     e.emp_name||''
+    ,cd.dep_name||''
+    ,cj.jikup_name||''
+from employee e, code_dept cd, code_jikup cj
+where e.dep_no = cd.dep_no and e.jikup_code = cj.jikup_code
+    and emp_no = #{emp_no}
+    and e.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+
+union all
+
+select
+     e.emp_name||''
+    ,cd.dep_name||''
+    ,cj.jikup_name||''
+from employee e, code_dept cd, code_jikup cj
+where e.dep_no = cd.dep_no and e.jikup_code = cj.jikup_code
+    and emp_no = (select mgr_emp_no from employee where emp_no = #{emp_no})
+    and e.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+
+union all
+
+select
+     e.emp_name||''
+    ,cd.dep_name||''
+    ,cj.jikup_name||''
+from employee e, code_dept cd, code_jikup cj
+where e.dep_no = cd.dep_no and e.jikup_code = cj.jikup_code
+    and emp_no = (select mgr_emp_no from employee where emp_no = (select mgr_emp_no from employee where emp_no = #{emp_no}))
+    and e.jikup_code >= (select jikup_code from employee where emp_no = #{emp_no})
+</select>
+
+<select id ="dailyContentForm2" parameterType="com.cloudWorks.erp.DailyDTO" resultType="java.util.HashMap">
+
+select
+    cs.sign_name||'' "SIGN_NAME"
+    ,sfr.sign_date||'' "SIGN_DATE"
+    ,nvl( (select return_result from return_report where sfr_no = sfr.sign_finish_no), ' ')||'' "RETURN_RESULT"
+from sign_finish_report sfr, code_sign cs
+where sfr.sign_code = cs.sign_code
+    and report_code = 1 and report_no = #{report_no}
+
+</select>
+-->
+
+<select id="dailyUnderSign" parameterType="com.cloudWorks.erp.DailyDTO" resultType="com.cloudWorks.erp.DailyDTO">
+
+select 
+    sign_code "SIGN_CODE"
+from SIGN_FINISH_REPORT sft, employee em
+where sft.emp_no = em.emp_no
+	and report_no = ${report_no}
+	and report_code = 1
+	and mgr_emp_no = ${emp_no}
+</select>
+
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

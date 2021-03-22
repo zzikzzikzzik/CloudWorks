@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		 
+	
+<mapper namespace="com.cloudWorks.erp.LoginDAO">
+
+	<select id='getEmpNoCnt' parameterType="com.cloudWorks.erp.LoginDTO" resultType="int">		
+		select count(*) from employee where emp_no=#{emp_no} and emp_pwd=#{emp_pwd}	and allow_code=1
+	</select>
+	
+	<select id='getAdminCnt' parameterType="com.cloudWorks.erp.LoginDTO" resultType="int">		
+		select count(*) from employee where emp_no=#{emp_no} and emp_pwd=#{emp_pwd}	and role='admin'
+	</select>
+	
+	<select id='getNotAllowCnt' parameterType="com.cloudWorks.erp.LoginDTO" resultType="int">		
+		select count(*) from employee where emp_no=#{emp_no} and emp_pwd=#{emp_pwd}	and allow_code=2
+	</select>
+
+</mapper>

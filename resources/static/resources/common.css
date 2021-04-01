@@ -1,0 +1,50 @@
+@charset "UTF-8";
+
+body, form, td, th, pre {
+	font-size: 9pt;
+	color: black;
+	line-height: 160%;
+	/* font-family: verdana, 굴림, 나눔고딕, tahoma, 돋움; */
+}
+
+input {
+	font-size: 9pt;
+	color: black;
+	/* font-family: verdana, 굴림, 나눔고딕, tahoma, 돋움; */
+	/* height: 20px; */
+}
+
+a:link {
+	text-decoration: none;
+	color: #c0c0c0;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #c0c0c0;
+}
+
+
+
+
+a:visited {
+	text-decoration: none;
+	color: #c0c0c0
+}
+
+.tbcss1, .tbcss1 td, .tbcss1 th {
+	border-collapse: collapse;
+	border: 1px solid black;
+	font-size: 9pt;
+	font-family: 나눔고딕, tahoma, 돋움, verdana;
+}
+
+.tbcss2, .tbcss2 td, .tbcss2 th {
+	border-collapse: collapse;
+	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+	border-left: 0px;
+	border-right: 0px;
+	font-size: 9pt;
+	font-family: 나눔고딕, tahoma, 돋움, verdana;
+}
